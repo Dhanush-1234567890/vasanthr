@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            color: blue;
+        }
+
+        header h1 { font-size: 3rem; }
+        header h2 { margin-top: 10px; }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: rgb(235, 183, 209);
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav button:hover { background: rgba(170, 19, 132, 0.8); color: white; }
+
+        section { padding: 40px 10%; display: none; }
+        .active { display: block; }
+
+        /* GALLERY & SLIDESHOW */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery img {
+            width: 100%;
+            border-radius: 15px;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .gallery img:hover { transform: scale(1.08); }
+
+        .slideshow-wrapper {
+            position: relative;
+            width: 70%;
+            max-width: 500px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .PICS-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .PICS-container img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            border-radius: 15px;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .PICS-container img.active { opacity: 1; }
+
+        .slide-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            border: none;
+            font-size: 26px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .prev { left: -60px; }
+        .next { right: -60px; }
+
+        /* MESSAGE & CREDIT */
+        .message { text-align: center; font-size: 1.5rem; color: white; }
+        
+        .credit {
+            margin: 300px;
+            border: 3px solid red;
+            padding: 10px 30px;
+            font-weight: 600;
+            background: white;
+            border-radius: 8px;
+            width: fit-content;
+            text-align: center;
+            margin-left: 600px;
+        }
+
+        /* QUIZ SECTION STYLES */
+        .quiz {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .question-step { display: none; }
+        .question-step.active-q { display: block; }
+
+        .quiz h3 { margin: 20px 0; }
+        
+        .quiz label {
+            display: block;
+            padding: 10px;
+            background: #f9f9f9;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quiz label:hover { background: #eee; }
+
+        .quiz-controls {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #ff6fa1;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .quiz button:hover { background: #ff3d86; }
+
+        #error-msg { color: #d9534f; font-size: 0.9rem; min-height: 20px; }
+        #result { margin-top: 15px; font-weight: bold; font-size: 1.2rem; text-align: center; }
+
+        /* KEY SHOWER */
+        .key {
+            position: fixed;
+            top: -50px;
+            font-size: 28px;
+            animation: keyFall linear forwards;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @keyframes keyFall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>💖 Happy Birthday! 💖</h1>
+        <h2>Celebrating your special day with love and memories!</h2>
+        <nav>
+            <button onclick="showSection('VIDEOS')"><b>VIDEOS</b></button>
+            <button onclick="showSection('PICS')"><b>PICS</b></button>
+            <button onclick="showSection('message')"><b>MESSAGES</b></button>
+            <button onclick="showSection('questions')"><b>QUESTIONS</b></button>
+        </nav>
+    </header>
+
+    <section id="VIDEOS">
+        <h2>Photo Gallery</h2>
+        <div class="gallery">
+            <img src="aiman-bahrin-iwexxOcFWzs-unsplash.jpg" alt="Sample">
+            <img src="ashith-mathew-JwpmuTBQXOI-unsplash.jpg" alt="Sample">
+            <img src="balu-s-prakash-sVjsQRJtLuM-unsplash.jpg" alt="Sample">
+            <img src="naimur-rehman-de8ftw2A0JI-unsplash.jpg" alt="Sample">
+            <img src="sabeel-mhmd-fVXo0wV0P38-unsplash.jpg" alt="Sample">
+            <img src="siddhardha-babu-pMlSWYOp6QA-unsplash.jpg" alt="Sample">
+        </div>
+    </section>
+
+    <section id="PICS" class="active">
+        <h2>Memory Slideshow</h2>
+        <div class="slideshow-wrapper">
+            <button class="slide-btn prev" onclick="prevSlide()">←</button>
+            <div class="PICS-container">
+                <img src="aiman-bahrin-iwexxOcFWzs-unsplash.jpg" class="active">
+                <img src="ashith-mathew-JwpmuTBQXOI-unsplash.jpg">
+                <img src="balu-s-prakash-sVjsQRJtLuM-unsplash.jpg">
+                <img src="naimur-rehman-de8ftw2A0JI-unsplash.jpg">
+                <img src="sabeel-mhmd-fVXo0wV0P38-unsplash.jpg">
+                <img src="siddhardha-babu-pMlSWYOp6QA-unsplash.jpg">
+            </div>
+            <button class="slide-btn next" onclick="nextSlide()">→</button>
+        </div>
+    </section>
+
+    <section id="message">
+        <div class="message">
+            <p>💖 Wishing you a day filled with happiness, laughter, and wonderful memories.  
+May the coming year bring success, inspiration, and endless opportunities to achieve your dreams. 💖</p>
+        </div>
+        <div class="credit">
+            <strong>Created by ungal vasanthu...! ❤️</strong>
+        </div>
+    </section>
+
+    <section id="questions">
+        <div class="quiz" id="quiz-box">
+            <h2>Birthday Quiz 🎂</h2>
+            
+            <div class="question-step active-q" id="step-1">
+                <h3>1. What language is used to create web pages?</h3>
+                <label><input type="radio" name="q1" value="a"> HTML</label>
+                <label><input type="radio" name="q1" value="b"> Python</label>
+            </div>
+
+            <div class="question-step" id="step-2">
+                <h3>2. Which is used for styling?</h3>
+                <label><input type="radio" name="q2" value="a"> CSS</label>
+                <label><input type="radio" name="q2" value="b"> C++</label>
+            </div>
+
+            <div class="question-step" id="step-3">
+                <h3>3. Which is used for website logic?</h3>
+                <label><input type="radio" name="q3" value="a"> JavaScript</label>
+                <label><input type="radio" name="q3" value="b"> HTML</label>
+            </div>
+
+            <div class="quiz-controls">
+                <p id="error-msg"></p>
+                <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+                <button id="submit-btn" onclick="checkQuiz()" style="display:none;">Submit Quiz</button>
+            </div>
+
+            <p id="result"></p>
+        </div>
+    </section>
+
+    <script>
+        /* SECTION NAVIGATION */
+        function showSection(id) {
+            document.querySelectorAll("section").forEach(section => {
+                section.classList.remove("active");
+            });
+            document.getElementById(id).classList.add("active");
+            if (id === "message") keyShower();
+        }
+
+        /* SLIDESHOW LOGIC */
+        const slides = document.querySelectorAll(".PICS-container img");
+        let current = 0;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove("active"));
+            slides[index].classList.add("active");
+        }
+
+        function nextSlide() {
+            current = (current + 1) % slides.length;
+            showSlide(current);
+        }
+
+        function prevSlide() {
+            current = (current - 1 + slides.length) % slides.length;
+            showSlide(current);
+        }
+        setInterval(nextSlide, 3000);
+
+        /* ONE-BY-ONE QUIZ LOGIC */
+        let currentStep = 1;
+        const totalQuestions = 3;
+
+        function nextQuestion() {
+            const currentSelected = document.querySelector(`input[name="q${currentStep}"]:checked`);
+            const errorMsg = document.getElementById("error-msg");
+
+            if (!currentSelected) {
+                errorMsg.innerHTML = "⚠️ Please select an answer before moving on!";
+                return;
+            }
+
+            errorMsg.innerHTML = ""; // Clear error
+            
+            // Hide current question
+            document.getElementById(`step-${currentStep}`).classList.remove("active-q");
+            
+            currentStep++;
+
+            // Show next question or show Submit button
+            if (currentStep <= totalQuestions) {
+                document.getElementById(`step-${currentStep}`).classList.add("active-q");
+            }
+
+            if (currentStep === totalQuestions) {
+                document.getElementById("next-btn").style.display = "none";
+                document.getElementById("submit-btn").style.display = "block";
+            }
+        }
+
+        function checkQuiz() {
+            const currentSelected = document.querySelector(`input[name="q${currentStep}"]:checked`);
+            if (!currentSelected) {
+                document.getElementById("error-msg").innerHTML = "⚠️ Please select the last answer!";
+                return;
+            }
+
+            let score = 0;
+            const answers = { q1: "a", q2: "a", q3: "a" };
+
+            if (document.querySelector('input[name="q1"]:checked')?.value === answers.q1) score++;
+            if (document.querySelector('input[name="q2"]:checked')?.value === answers.q2) score++;
+            if (document.querySelector('input[name="q3"]:checked')?.value === answers.q3) score++;
+
+            document.getElementById("step-3").classList.remove("active-q");
+            document.getElementById("submit-btn").style.display = "none";
+            document.getElementById("error-msg").innerHTML = "";
+            document.getElementById("result").innerHTML = "🎉 Your Score: " + score + "/3! Happy Birthday!";
+        }
+
+        /* KEY SHOWER EFFECT */
+        function keyShower() {
+            for (let i = 0; i < 40; i++) {
+                const key = document.createElement("div");
+                key.className = "key";
+                key.innerHTML = "🔑";
+                key.style.left = Math.random() * 100 + "vw";
+                key.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                document.body.appendChild(key);
+                setTimeout(() => { key.remove(); }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
